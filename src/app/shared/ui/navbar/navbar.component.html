@@ -1,0 +1,103 @@
+<div
+  class="w-full py-6 px-3 flex justify-center items-center bg-inherit sticky top-0 z-50"
+>
+  <!-- Drawer for mobile -->
+  <div
+    *ngIf="visible"
+    class="fixed inset-0 bg-black bg-opacity-50 z-50 min-[560px]:hidden"
+  >
+    <div class="fixed left-0 top-0 h-full w-full bg-white">
+      <div class="p-4 border-b">
+        <div class="flex justify-between items-center">
+          <h2>Menu</h2>
+          <button (click)="onClose()" class="text-gray-500">&times;</button>
+        </div>
+      </div>
+      <div class="p-4">
+        <div
+          *ngFor="let item of menuItems"
+          (click)="item.onClick(); onClose()"
+          class="w-full p-4 rounded-md text-[#2C2550] font-medium text-lg cursor-pointer hover:bg-gray-200"
+        >
+          {{ item.label }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navbar -->
+  <div
+    style="box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04)"
+    class="flex justify-between items-center w-full max-w-3xl bg-[#fff] rounded-full py-4 px-5 border border-[#EFEFF9]"
+  >
+    <img src="/assets/images/logo.png" alt="logo" class="w-28 h-8" />
+    <!-- Desktop Menu -->
+    <div
+      class="w-fit rounded-3xl p-1 flex gap-1 justify-center items-center bg-[#EFEFF9] max-[560px]:hidden"
+    >
+      <div
+        *ngFor="let item of menuItems"
+        (click)="item.onClick()"
+        class="w-fit h-full px-4 py-2 text-[#2C2550] font-medium text-sm rounded-3xl cursor-pointer hover:bg-white hover:shadow-md"
+      >
+        {{ item.label }}
+      </div>
+    </div>
+
+    <!-- LinkedIn Button -->
+    <a
+      target="_blank"
+      href="https://www.linkedin.com/in/albina-hartner-yildiz-7595007b/"
+      class="w-fit !p-1 !bg-[#EFEFF9] rounded-[20px] cursor-pointer h-[44px] !text-black font-medium max-[560px]:hidden"
+    >
+      <div
+        class="w-fit px-[14px] py-[7px] bg-[#fff] flex gap-[7px] items-center justify-center rounded-[20px] h-full"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          viewBox="0 0 25 25"
+          fill="none"
+        >
+          <g clip-path="url(#clip0_133_394)">
+            <path
+              d="M22.9481 0.220093H2.49139C2.02152 0.220093 1.57089 0.40675 1.23864 0.739002C0.906384 1.07125 0.719727 1.52188 0.719727 1.99176V22.4484C0.719727 22.9183 0.906384 23.3689 1.23864 23.7012C1.57089 24.0334 2.02152 24.2201 2.49139 24.2201H22.9481C23.4179 24.2201 23.8686 24.0334 24.2008 23.7012C24.5331 23.3689 24.7197 22.9183 24.7197 22.4484V1.99176C24.7197 1.52188 24.5331 1.07125 24.2008 0.739002C23.8686 0.40675 23.4179 0.220093 22.9481 0.220093ZM7.87306 20.6651H4.26473V9.20343H7.87306V20.6651ZM6.06639 7.61509C5.65709 7.61279 5.25764 7.48929 4.91846 7.26018C4.57928 7.03107 4.31557 6.70662 4.1606 6.32778C4.00564 5.94894 3.96637 5.53268 4.04776 5.13155C4.12914 4.73041 4.32753 4.36237 4.61788 4.07387C4.90824 3.78538 5.27754 3.58936 5.67919 3.51055C6.08084 3.43175 6.49684 3.47369 6.87468 3.63108C7.25252 3.78847 7.57527 4.05426 7.80219 4.39491C8.02912 4.73555 8.15005 5.13578 8.14973 5.54509C8.15359 5.81913 8.10224 6.09113 7.99874 6.3449C7.89524 6.59866 7.74171 6.82899 7.5473 7.02216C7.35289 7.21533 7.12158 7.36738 6.86715 7.46924C6.61273 7.57111 6.3404 7.62071 6.06639 7.61509ZM21.1731 20.6751H17.5664V14.4134C17.5664 12.5668 16.7814 11.9968 15.7681 11.9968C14.6981 11.9968 13.6481 12.8034 13.6481 14.4601V20.6751H10.0397V9.21176H13.5097V10.8001H13.5564C13.9047 10.0951 15.1247 8.89009 16.9864 8.89009C18.9997 8.89009 21.1747 10.0851 21.1747 13.5851L21.1731 20.6751Z"
+              fill="#0A66C2"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_133_394">
+              <rect
+                x="0.719727"
+                y="0.220093"
+                width="24"
+                height="24"
+                rx="6"
+                fill="white"
+              />
+            </clipPath>
+          </defs>
+        </svg>
+        Linkedin
+      </div>
+    </a>
+
+    <!-- Mobile Menu Button -->
+    <button (click)="showDrawer()" class="min-[560px]:hidden">
+      <svg
+        viewBox="64 64 896 896"
+        focusable="false"
+        data-icon="menu-fold"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM142.4 642.1L298.7 519a8.84 8.84 0 000-13.9L142.4 381.9c-5.8-4.6-14.4-.5-14.4 6.9v246.3a8.9 8.9 0 0014.4 7z"
+        ></path>
+      </svg>
+    </button>
+  </div>
+</div>

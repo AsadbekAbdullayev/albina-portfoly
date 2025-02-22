@@ -1,0 +1,44 @@
+<div
+  class="w-full py-20 flex justify-center items-center bg-[#FBFBFF] flex-col"
+>
+  <div
+    class="flex justify-start items-center gap-4 border-l-2 border-l-[#81C041] pl-4"
+  >
+    <p class="text-[#9BD95C] text-xs font-medium">BLOG</p>
+  </div>
+  <div
+    class="w-full flex max-[480px]:px-2 justify-between items-center max-w-7xl pt-12"
+  >
+    <div
+      class="w-full max-[480px]:text-xl flex justify-between text-[#141414] text-3xl font-bold leading-normal"
+    >
+      Latest Blog & Resources
+    </div>
+  </div>
+
+  <!-- ngx-slick-carousel -->
+  <div class="w-full max-w-[1340px] mt-9">
+    <ngx-slick-carousel class="carousel" [config]="slideConfig">
+      <div
+        ngxSlickItem
+        *ngFor="let slide of slides; let i = index"
+        class="slide"
+        (click)="navigateToBlog(i)"
+      >
+        <div
+          class="relative max-[480px]:w-[323.637px] w-[393.637px] h-[292.496px] cursor-pointer flex-shrink-0 bg-cover bg-center mx-auto rounded-3xl"
+          [style.backgroundImage]="'url(' + slide.img + ')'"
+        >
+          <div
+            class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t rounded-3xl from-black to-transparent"
+          >
+            <p class="text-white text-sm truncate max-h-[3.6em]">
+              {{ slide.title }}
+            </p>
+            <h3 class="text-white text-xl truncate">{{ slide.desc }}</h3>
+          </div>
+        </div>
+      </div>
+    </ngx-slick-carousel>
+  </div>
+</div>
