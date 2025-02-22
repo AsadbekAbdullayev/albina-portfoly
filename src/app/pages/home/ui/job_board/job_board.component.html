@@ -35,7 +35,7 @@
             </clipPath>
           </defs>
         </svg>
-        <p class="text-[#9BD95C] text-xs font-medium">Portfolio</p>
+        <p class="text-[#9BD95C] text-xs font-medium !mb-0">Portfolio</p>
       </div>
 
       <div class="flex flex-col gap-3">
@@ -78,6 +78,7 @@
         class="flex flex-wrap justify-start gap-2 max-[1280px]:justify-center max-[1280px]:px-3"
       >
         <div
+          (click)="navigateToJob(item.id)"
           *ngFor="let item of portfolioItems"
           class="rounded-2xl group relative bg-cover bg-center transition-all duration-500 max-[380px]:w-[322px] !w-[362px] !h-[300px] cursor-pointer"
           [style.backgroundImage]="'url(' + item.image + ')'"

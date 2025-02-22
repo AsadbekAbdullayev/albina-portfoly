@@ -33,7 +33,7 @@ export class BlogComponent {
   ];
 
   slideConfig = {
-    slidesToShow: 1,
+    slidesToShow: 3,
     slidesToScroll: 1,
     dots: true,
     infinite: true,
@@ -63,6 +63,6 @@ export class BlogComponent {
   constructor(private router: Router) {}
 
   navigateToBlog(index: number) {
-    this.router.navigate([`/blog/${index}`]);
+    this.router.navigate([`/post/${index}`]);
   }
 }
