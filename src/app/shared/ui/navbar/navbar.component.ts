@@ -18,34 +18,40 @@ export class NavbarComponent implements OnInit {
       label: 'Home',
       onClick: () => {
         this.router.navigate(['/']);
-        this.viewportScroller.scrollToPosition([0, 0]);
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
       },
     },
     {
       label: 'Podcast',
       onClick: () => {
         this.router.navigate(['/']);
-        this.viewportScroller.scrollToPosition([0, this.isMobile ? 480 : 774]);
+        window.scrollTo({
+          top: this.isMobile ? 480 : 774,
+          behavior: 'smooth',
+        });
       },
     },
     {
       label: 'Portfolio',
       onClick: () => {
         this.router.navigate(['/']);
-        this.viewportScroller.scrollToPosition([
-          0,
-          this.isMobile ? 1250 : 1934,
-        ]);
+        window.scrollTo({
+          top: this.isMobile ? 1250 : 1934,
+          behavior: 'smooth',
+        });
       },
     },
     {
       label: 'Blog',
       onClick: () => {
         this.router.navigate(['/']);
-        this.viewportScroller.scrollToPosition([
-          0,
-          this.isMobile ? 3680 : 3074,
-        ]);
+        window.scrollTo({
+          top: this.isMobile ? 3680 : 3074,
+          behavior: 'smooth',
+        });
       },
     },
   ];

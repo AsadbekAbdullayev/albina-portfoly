@@ -1,316 +1,37 @@
-<div class="min-h-screen bg-white dark:bg-gray-800">
-  <!-- Header -->
-  <header class="p-4 border-b dark:border-gray-700">
-    <div class="flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
-        Admin Dashboard
-      </h1>
-      <button
-        (click)="toggleDarkMode()"
-        class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700"
-      >
-        <span class="text-gray-600 dark:text-gray-300"
-          >{{ darkMode ? "Light" : "Dark" }} Mode</span
+<div class="min-h-screen flex">
+  <!-- Sidebar -->
+  <div class="w-64 bg-gray-800 text-white flex flex-col">
+    <div class="p-4 text-2xl font-bold">Admin Panel</div>
+    <nav class="flex-1 h-full relative !flex !flex-col !gap-1">
+      <ul class="h-full !flex !flex-col !gap-1">
+        <li
+          class="p-4 hover:bg-blue-600 cursor-pointer"
+          [ngClass]="{ 'bg-blue-600': selectedSection === 'posts' }"
+          (click)="selectSection('posts')"
         >
-      </button>
-    </div>
-  </header>
+          Posts
+        </li>
+        <li
+          class="p-4 hover:bg-blue-600 cursor-pointer"
+          [ngClass]="{ 'bg-blue-600': selectedSection === 'portfolio' }"
+          (click)="selectSection('portfolio')"
+        >
+          Portfolio
+        </li>
 
-  <div class="p-6">
-    <!-- Blog Section -->
-    <div class="mb-8">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
-          Blog Posts
-        </h2>
-        <button
-          (click)="openNewBlog()"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        <li
+          class="p-4 text-2xl font-medium hover:bg-blue-600 cursor-pointer !text-white w-full absolute bottom-10"
+          (click)="navigateToLoginPage()"
         >
-          Add New Blog
-        </button>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table
-          class="min-w-full bg-white dark:bg-gray-900 rounded-lg overflow-hidden"
-        >
-          <thead class="bg-gray-100 dark:bg-gray-800">
-            <tr>
-              <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-300">
-                Title
-              </th>
-              <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-300">
-                Description
-              </th>
-              <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-300">
-                Image
-              </th>
-              <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-300">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let blog of blogs"
-              class="border-b dark:border-gray-700"
-            >
-              <td class="px-6 py-4 text-gray-800 dark:text-gray-300">
-                {{ blog.title }}
-              </td>
-              <td class="px-6 py-4 text-gray-800 dark:text-gray-300">
-                {{ blog.description }}
-              </td>
-              <td class="px-6 py-4">
-                <img
-                  [src]="blog.image"
-                  alt="blog image"
-                  class="w-16 h-16 object-cover rounded"
-                />
-              </td>
-              <td class="px-6 py-4">
-                <button
-                  (click)="editBlog(blog)"
-                  class="mr-2 p-2 bg-green-600 text-white rounded hover:bg-green-700"
-                >
-                  Edit
-                </button>
-                <button
-                  (click)="deleteBlog(blog)"
-                  class="p-2 bg-red-600 text-white rounded hover:bg-red-700"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Portfolio Section -->
-    <div class="mb-8">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
-          Portfolio Items
-        </h2>
-        <button
-          (click)="openNewPortfolio()"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Add New Portfolio
-        </button>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table
-          class="min-w-full bg-white dark:bg-gray-900 rounded-lg overflow-hidden"
-        >
-          <thead class="bg-gray-100 dark:bg-gray-800">
-            <tr>
-              <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-300">
-                Title
-              </th>
-              <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-300">
-                Description
-              </th>
-              <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-300">
-                YouTube URL
-              </th>
-              <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-300">
-                Images
-              </th>
-              <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-300">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let portfolio of portfolios"
-              class="border-b dark:border-gray-700"
-            >
-              <td class="px-6 py-4 text-gray-800 dark:text-gray-300">
-                {{ portfolio.title }}
-              </td>
-              <td class="px-6 py-4 text-gray-800 dark:text-gray-300">
-                {{ portfolio.description }}
-              </td>
-              <td class="px-6 py-4 text-gray-800 dark:text-gray-300">
-                {{ portfolio.youtubeUrl }}
-              </td>
-              <td class="px-6 py-4">
-                <div class="flex gap-2">
-                  <img
-                    *ngFor="let image of portfolio.images"
-                    [src]="image"
-                    alt="portfolio image"
-                    class="w-16 h-16 object-cover rounded"
-                  />
-                </div>
-              </td>
-              <td class="px-6 py-4">
-                <button
-                  (click)="editPortfolio(portfolio)"
-                  class="mr-2 p-2 bg-green-600 text-white rounded hover:bg-green-700"
-                >
-                  Edit
-                </button>
-                <button
-                  (click)="deletePortfolio(portfolio)"
-                  class="p-2 bg-red-600 text-white rounded hover:bg-red-700"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+          Exit
+        </li>
+      </ul>
+    </nav>
   </div>
-</div>
 
-<!-- Blog Modal -->
-<div
-  *ngIf="blogDialog"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
->
-  <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-    <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
-      {{ newBlog.id ? "Edit" : "New" }} Blog
-    </h3>
-    <form (ngSubmit)="saveBlog()">
-      <div class="mb-4">
-        <label class="block text-gray-700 dark:text-gray-300 mb-2">Title</label>
-        <input
-          [(ngModel)]="newBlog.title"
-          name="title"
-          required
-          class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-        />
-      </div>
-
-      <div class="mb-4">
-        <label class="block text-gray-700 dark:text-gray-300 mb-2"
-          >Description</label
-        >
-        <textarea
-          [(ngModel)]="newBlog.description"
-          name="description"
-          required
-          class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-        ></textarea>
-      </div>
-
-      <div class="mb-4">
-        <label class="block text-gray-700 dark:text-gray-300 mb-2">Image</label>
-        <input
-          type="file"
-          (change)="onUpload($event)"
-          accept="image/*"
-          class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-        />
-      </div>
-
-      <div class="flex justify-end gap-2">
-        <button
-          type="button"
-          (click)="blogDialog = false"
-          class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 dark:bg-gray-700 dark:text-white"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Save
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- Portfolio Modal -->
-<div
-  *ngIf="portfolioDialog"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
->
-  <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-    <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
-      {{ newPortfolio.id ? "Edit" : "New" }} Portfolio
-    </h3>
-    <form (ngSubmit)="savePortfolio()">
-      <div class="mb-4">
-        <label class="block text-gray-700 dark:text-gray-300 mb-2">Title</label>
-        <input
-          [(ngModel)]="newPortfolio.title"
-          name="title"
-          required
-          class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-        />
-      </div>
-
-      <div class="mb-4">
-        <label class="block text-gray-700 dark:text-gray-300 mb-2"
-          >Description</label
-        >
-        <textarea
-          [(ngModel)]="newPortfolio.description"
-          name="description"
-          required
-          class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-        ></textarea>
-      </div>
-
-      <div class="mb-4">
-        <label class="block text-gray-700 dark:text-gray-300 mb-2"
-          >YouTube URL</label
-        >
-        <input
-          [(ngModel)]="newPortfolio.youtubeUrl"
-          name="youtubeUrl"
-          class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-        />
-      </div>
-
-      <div class="mb-4">
-        <label class="block text-gray-700 dark:text-gray-300 mb-2"
-          >Images</label
-        >
-        <input
-          type="file"
-          (change)="onUpload($event, true)"
-          accept="image/*"
-          class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-        />
-
-        <div class="flex gap-2 mt-2">
-          <img
-            *ngFor="let image of newPortfolio.images"
-            [src]="image"
-            class="w-16 h-16 object-cover rounded"
-          />
-        </div>
-      </div>
-
-      <div class="flex justify-end gap-2">
-        <button
-          type="button"
-          (click)="portfolioDialog = false"
-          class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 dark:bg-gray-700 dark:text-white"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Save
-        </button>
-      </div>
-    </form>
+  <!-- Main Content -->
+  <div class="flex-1 p-6 bg-gray-100">
+    <app-posts *ngIf="selectedSection === 'posts'"></app-posts>
+    <app-portfolio *ngIf="selectedSection === 'portfolio'"></app-portfolio>
   </div>
 </div>

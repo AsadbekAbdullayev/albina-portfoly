@@ -1,0 +1,61 @@
+<div>
+  <h2 class="text-xl font-semibold mb-4">Posts</h2>
+  <button mat-raised-button color="primary" (click)="openDialog()">
+    Add New Post
+  </button>
+  <ul>
+    <li *ngFor="let post of posts" class="mb-2 p-4 bg-white rounded-lg shadow">
+      <h3 class="font-bold">{{ post.title }}</h3>
+      <p>{{ post.description }}</p>
+      <img
+        *ngIf="post.image"
+        [src]="post.image"
+        alt="Post image"
+        class="w-32 h-32 object-cover rounded mt-2"
+      />
+      <div class="mt-2">
+        <button mat-button color="accent" (click)="editPost(post)">Edit</button>
+        <button mat-button color="warn" (click)="deletePost(post)">
+          Delete
+        </button>
+      </div>
+    </li>
+  </ul>
+
+  <!-- Dialog Template -->
+  <ng-template #dialogTemplate let-data>
+    <h2 mat-dialog-title>{{ data.isEdit ? "Edit" : "Add New" }} Post</h2>
+    <mat-dialog-content>
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Title</mat-label>
+        <input matInput [(ngModel)]="data.item.title" />
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Description</mat-label>
+        <textarea matInput [(ngModel)]="data.item.description"></textarea>
+      </mat-form-field>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 mb-2">Image</label>
+        <input
+          type="file"
+          (change)="onFileSelected($event)"
+          accept="image/*"
+          class="w-full px-3 py-2 border rounded-lg"
+        />
+        <img
+          *ngIf="data.item.image"
+          [src]="data.item.image"
+          alt="Selected image"
+          class="w-32 h-32 object-cover rounded mt-2"
+        />
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="closeDialog()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="saveItem(data)">
+        Save
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+</div>
