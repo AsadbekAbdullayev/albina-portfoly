@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,13 +6,22 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
-
+import { MatIconModule } from '@angular/material/icon';
+import { ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
 @Component({
   selector: 'app-posts',
   standalone: true,
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.css'],
   imports: [
+    MatIconModule,
+    ReactiveFormsModule,
     CommonModule,
     MatDialogModule,
     MatButtonModule,
@@ -23,32 +32,35 @@ import { MatDialogModule } from '@angular/material/dialog';
 })
 export class PostsComponent {
   @ViewChild('dialogTemplate') dialogTemplate!: TemplateRef<any>;
-  selectedFile: File | null = null;
-  dialogRef: any;
+  postForm = new FormGroup({
+    title: new FormControl('', [Validators.required]),
+    description: new FormControl('', [Validators.required]),
+    img: new FormControl('', Validators.required),
+  });
+  constructor(private dialog: MatDialog, private fb: FormBuilder) {
+    this.postForm = this.fb.group({
+      title: '',
+      description: '',
+      img: '', // Holds the file
+    });
+  }
 
+  dialogRef: any;
+  selectedFile: string = '';
   posts = [
     {
       id: 1,
       title: 'First Post',
       description: 'This is the first post.',
-      image: '',
+      image: null,
     },
   ];
 
-  constructor(private dialog: MatDialog) {}
-
-  onFileSelected(event: any) {
+  onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.selectedFile = file;
-      // Convert file to base64 string
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        if (this.dialogRef) {
-          this.dialogRef.componentInstance.data.item.image = e.target.result;
-        }
-      };
-      reader.readAsDataURL(file);
+      this.postForm.patchValue({ img: file });
+      this.selectedFile = URL.createObjectURL(file);
     }
   }
 
@@ -92,10 +104,13 @@ export class PostsComponent {
 
   closeDialog() {
     this.dialog.closeAll();
+    this.postForm.patchValue({ img: '', title: '', description: '' });
   }
 
-  saveItem(data: any) {
+  saveItem(e: any) {
+    // e.preventDefault();
     this.dialog.closeAll();
-    return data.item;
+    console.log(this.postForm.value, 'submitForm');
+    this.postForm.patchValue({ img: '', title: '', description: '' });
   }
 }
