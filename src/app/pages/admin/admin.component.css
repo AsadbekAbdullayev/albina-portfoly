@@ -1,0 +1,94 @@
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+}
+
+.dark-theme .sidebar {
+  background-color: #1e1e1e;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f5f5f5;
+  transition: all 0.3s ease;
+}
+
+.dark-theme .main-content {
+  background-color: #121212;
+  color: #fff;
+}
+
+.navbar {
+  height: 64px;
+  background-color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.dark-theme .navbar {
+  background-color: #1e1e1e;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.section-card {
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .section-card {
+  background-color: #2d2d2d;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.mat-mdc-table {
+  width: 100%;
+  background-color: transparent;
+}
+
+.dark-theme .mat-mdc-table {
+  color: #fff;
+}
+
+.form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.file-upload {
+  margin: 16px 0;
+}
+
+.preview-image {
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-top: 8px;
+}

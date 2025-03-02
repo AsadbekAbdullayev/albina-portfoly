@@ -1,0 +1,37 @@
+<div class="min-h-screen flex">
+  <!-- Sidebar -->
+  <div class="w-64 bg-gray-800 text-white flex flex-col">
+    <div class="p-4 text-2xl font-bold">Admin Panel</div>
+    <nav class="flex-1 h-full relative !flex !flex-col !gap-1">
+      <ul class="h-full !flex !flex-col !gap-1">
+        <li
+          class="p-4 hover:bg-blue-600 cursor-pointer"
+          [ngClass]="{ 'bg-blue-600': selectedSection === 'posts' }"
+          (click)="selectSection('posts')"
+        >
+          Posts
+        </li>
+        <li
+          class="p-4 hover:bg-blue-600 cursor-pointer"
+          [ngClass]="{ 'bg-blue-600': selectedSection === 'portfolio' }"
+          (click)="selectSection('portfolio')"
+        >
+          Portfolio
+        </li>
+
+        <li
+          class="p-4 text-2xl font-medium hover:bg-blue-600 cursor-pointer !text-white w-full absolute bottom-10"
+          (click)="navigateToLoginPage()"
+        >
+          Exit
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 p-6 bg-gray-100">
+    <app-posts *ngIf="selectedSection === 'posts'"></app-posts>
+    <app-portfolio *ngIf="selectedSection === 'portfolio'"></app-portfolio>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+<div class="w-full py-20 flex justify-center items-center bg-[#FFF] flex-col">
+  <div
+    class="w-full flex gap-16 max-w-7xl max-[1280px]:flex-col max-[1280px]:items-center max-[1280px]:px-3"
+  >
+    <div
+      class="max-w-[400px] w-full flex flex-col max-[1280px]:justify-center gap-9"
+    >
+      <div
+        class="w-fit flex justify-start items-center gap-4 border-l-2 border-l-[#81C041] pl-4"
+      >
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 25 25"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g clip-path="url(#clip0_14_297)">
+            <path
+              d="M19.7799 10.61V12.61C19.7799 14.4666 19.0424 16.247 17.7297 17.5598C16.4169 18.8725 14.6364 19.61 12.7799 19.61M12.7799 19.61C10.9234 19.61 9.14291 18.8725 7.83016 17.5598C6.51741 16.247 5.77991 14.4666 5.77991 12.61V10.61M12.7799 19.61V23.61M8.77991 23.61H16.7799M12.7799 1.61005C11.9843 1.61005 11.2212 1.92612 10.6586 2.48873C10.096 3.05134 9.77991 3.8144 9.77991 4.61005V12.61C9.77991 13.4057 10.096 14.1688 10.6586 14.7314C11.2212 15.294 11.9843 15.61 12.7799 15.61C13.5756 15.61 14.3386 15.294 14.9012 14.7314C15.4638 14.1688 15.7799 13.4057 15.7799 12.61V4.61005C15.7799 3.8144 15.4638 3.05134 14.9012 2.48873C14.3386 1.92612 13.5756 1.61005 12.7799 1.61005Z"
+              stroke="#9BD95C"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_14_297">
+              <rect
+                width="24"
+                height="24"
+                fill="white"
+                transform="translate(0.779907 0.610046)"
+              />
+            </clipPath>
+          </defs>
+        </svg>
+        <p class="text-[#9BD95C] text-xs font-medium !mb-0">Portfolio</p>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <p class="text-[#0C0C0C] text-4xl font-medium leading-[120%]">
+          Knowledge Without Borders
+        </p>
+        <p class="text-[#5C687D] text-base leading-[140%]">
+          I am an internationally-experienced, highly motivated, and
+          multifaceted educational project manager, with a proven track record
+          of success. Dedicated to advancing the field of education, I am driven
+          to transform innovative ideas into tangible educational initiatives.
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="max-w-[744px] w-full flex flex-col gap-9 max-[1280px]:items-center max-[1280px]:px-3"
+    >
+      <div
+        class="w-fit rounded-3xl p-1 flex gap-1 justify-center items-center bg-[#EFEFF9]"
+      >
+        <div
+          class="w-fit h-full px-5 py-2 shadow-md text-[#2C2550] font-medium text-sm rounded-3xl cursor-pointer bg-white"
+        >
+          All
+        </div>
+        <div
+          class="w-fit px-5 py-2 text-[#2C255099] font-medium text-sm rounded-3xl cursor-pointer"
+        >
+          Design
+        </div>
+        <div
+          class="w-fit px-5 py-2 text-[#2C255099] font-medium text-sm rounded-3xl cursor-pointer"
+        >
+          Education board
+        </div>
+      </div>
+
+      <div
+        class="flex flex-wrap justify-start gap-2 max-[1280px]:justify-center max-[1280px]:px-3"
+      >
+        <div
+          (click)="navigateToJob(item.id)"
+          *ngFor="let item of portfolioItems"
+          class="rounded-2xl group relative bg-cover bg-center transition-all duration-500 max-[380px]:w-[322px] !w-[362px] !h-[300px] cursor-pointer"
+          [style.backgroundImage]="'url(' + item.image + ')'"
+        >
+          <!-- Gradient Overlay -->
+          <div
+            class="rounded-2xl absolute inset-0 bg-gradient-to-b from-transparent to-[#020617] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></div>
+          <!-- Content -->
+          <div
+            class="inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          >
+            <h1
+              class="absolute bottom-2 left-5 !text-white text-base font-semibold"
+            >
+              {{ item.title }}
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
