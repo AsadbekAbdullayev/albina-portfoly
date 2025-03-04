@@ -1,6 +1,5 @@
 FROM node:22-alpine as builder
 WORKDIR /app
-RUN npm install -g npm@10.5.2
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
