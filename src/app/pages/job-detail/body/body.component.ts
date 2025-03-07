@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FooterComponent } from '../../../shared/ui/footer/footer.component';
 @Component({
   selector: 'app-body',
@@ -15,7 +15,8 @@ export class BodyComponent implements OnInit {
     { src: '/assets/img/test-image.png' },
     { src: '/assets/img/test-image.png' },
   ];
-
+  @Input() blogDetail: any = {};
+  @Input() loading: boolean = false;
   ngOnInit() {
     window.scrollTo(0, 0);
   }

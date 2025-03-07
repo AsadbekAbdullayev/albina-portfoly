@@ -77,25 +77,27 @@
       <div
         class="flex flex-wrap justify-start gap-2 max-[1280px]:justify-center max-[1280px]:px-3"
       >
-        <div
-          (click)="navigateToJob(item.id)"
-          *ngFor="let item of portfolioItems"
-          class="rounded-2xl group relative bg-cover bg-center transition-all duration-500 max-[380px]:w-[322px] !w-[362px] !h-[300px] cursor-pointer"
-          [style.backgroundImage]="'url(' + item.image + ')'"
-        >
-          <!-- Gradient Overlay -->
+        <nz-skeleton *ngIf="loading" [nzActive]="true"></nz-skeleton>
+        <div class="flex flex-wrap justify-start gap-2" *ngIf="!loading">
           <div
-            class="rounded-2xl absolute inset-0 bg-gradient-to-b from-transparent to-[#020617] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          ></div>
-          <!-- Content -->
-          <div
-            class="inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            *ngFor="let item of portfolioItems"
+            (click)="navigateToJob(item.id)"
+            class="rounded-2xl group relative bg-cover bg-center transition-all duration-500 max-[380px]:w-[322px] !w-[362px] !h-[300px] cursor-pointer"
+            [style.backgroundImage]="'url(' + item.image + ')'"
           >
-            <h1
-              class="absolute bottom-2 left-5 !text-white text-base font-semibold"
+            <div
+              class="rounded-2xl absolute inset-0 bg-gradient-to-b from-transparent to-[#020617] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            ></div>
+            <!-- Content -->
+            <div
+              class="inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             >
-              {{ item.title }}
-            </h1>
+              <h1
+                class="absolute bottom-2 left-5 !text-white text-base font-semibold"
+              >
+                {{ item.title }}
+              </h1>
+            </div>
           </div>
         </div>
       </div>

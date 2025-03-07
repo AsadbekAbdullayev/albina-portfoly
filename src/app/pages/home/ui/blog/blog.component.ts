@@ -2,13 +2,17 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { CommonModule } from '@angular/common';
+import { ApiService } from '../../../../services/api.service';
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+
 @Component({
   selector: 'app-blog',
   templateUrl: './blog.component.html',
-  styleUrls: ['./blog.component.css'],
-  imports: [SlickCarouselModule, CommonModule],
+  imports: [SlickCarouselModule, CommonModule, NzSkeletonModule],
 })
 export class BlogComponent {
+  loading = false;
+  blogs = [];
   slides = [
     {
       img: 'assets/images/test-image.png',
@@ -60,9 +64,26 @@ export class BlogComponent {
     ],
   };
 
-  constructor(private router: Router) {}
+  constructor(private apiService: ApiService, private router: Router) {}
 
   navigateToBlog(index: number) {
     this.router.navigate([`/post/${index}`]);
+  }
+  getBlogsForUser() {
+    this.loading = true;
+    this.apiService.getBlogsForUsers().subscribe({
+      next: (response: any) => {
+        this.loading = false;
+        this.blogs = response.data;
+      },
+      error: (error: any) => {
+        this.loading = false;
+        console.error('Failed to fetch blogs', error);
+      },
+    });
+  }
+
+  ngOnInit() {
+    this.getBlogsForUser();
   }
 }

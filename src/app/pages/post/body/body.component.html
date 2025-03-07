@@ -1,5 +1,12 @@
 <div class="flex flex-col gap-8 max-[700px]:gap-3">
   <app-navbar></app-navbar>
+  @if (loading) {
+  <div class="w-full !flex !justify-center px-32 flex-col gap-5">
+    <nz-skeleton [nzActive]="true"></nz-skeleton>
+    <nz-skeleton [nzActive]="true"></nz-skeleton>
+    <nz-skeleton [nzActive]="true"></nz-skeleton>
+  </div>
+  } @else{
   <div
     class="w-full flex flex-col items-center justify-center max-[700px]:px-3"
   >
@@ -54,4 +61,5 @@
       </p>
     </div>
   </div>
+  }
 </div>
