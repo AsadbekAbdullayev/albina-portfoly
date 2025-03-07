@@ -8,6 +8,7 @@
   >
     Add New Blog
   </button>
+  <nz-spin *ngIf="loadingBlogs" nzTip="Loading..."></nz-spin>
   <div *ngIf="posts.length; else noPosts">
     <ul class="w-full h-screen overflow-y-auto px-1">
       <li
