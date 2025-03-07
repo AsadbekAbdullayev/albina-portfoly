@@ -7,7 +7,6 @@ import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 @Component({
   selector: 'app-jobboard',
   templateUrl: './job_board.component.html',
-  styleUrls: ['./podcast.component.css'],
   imports: [CommonModule, NzSkeletonModule],
 })
 export class JobboardComponent {

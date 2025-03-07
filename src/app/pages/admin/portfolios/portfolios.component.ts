@@ -65,7 +65,9 @@ export class PortfolioComponent implements OnInit {
   ngOnInit() {
     this.getPortfolios();
   }
-
+  Log(e: any) {
+    console.log(e, 'e');
+  }
   getPortfolios() {
     this.loadingBlogs = true;
     this.apiService.getPortfolios().subscribe({
