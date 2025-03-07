@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, signal } from '@angular/core';
+import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
