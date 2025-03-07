@@ -1,31 +1,47 @@
 <div>
-  <h2 class="text-xl font-semibold mb-4">Posts</h2>
-  <button mat-raised-button color="primary" (click)="openDialog()">
-    Add New Post
+  <h2 class="text-xl font-semibold mb-4">Blogs</h2>
+  <button
+    mat-raised-button
+    color="primary"
+    class="!mb-6"
+    (click)="openDialog(true)"
+  >
+    Add New Blog
   </button>
-  <ul>
-    <li *ngFor="let post of posts" class="mb-2 p-4 bg-white rounded-lg shadow">
-      <h3 class="font-bold">{{ post.title }}</h3>
-      <p>{{ post.description }}</p>
-      <img
-        *ngIf="post.image"
-        [src]="post.image"
-        alt="Post image"
-        class="w-32 h-32 object-cover rounded mt-2"
-      />
-      <div class="mt-2">
-        <button mat-button color="accent" (click)="editPost(post)">Edit</button>
-        <button mat-button color="warn" (click)="deletePost(post)">
-          Delete
-        </button>
-      </div>
-    </li>
-  </ul>
+  <div *ngIf="posts.length; else noPosts">
+    <ul class="w-full h-screen overflow-y-auto px-1">
+      <li
+        *ngFor="let post of posts"
+        class="mb-2 p-4 bg-white rounded-lg shadow"
+      >
+        <h3 class="font-bold">{{ post.title }}</h3>
+        <p class="line-clamp-2">{{ post.content }}</p>
+        <img
+          *ngIf="post.thumbnail"
+          [src]="post.thumbnail"
+          loading="lazy"
+          alt="Post image"
+          class="w-32 h-32 object-cover rounded mt-2"
+        />
+        <div class="mt-2">
+          <button mat-button color="accent" (click)="editPost(post)">
+            Edit
+          </button>
+          <button mat-button color="warn" (click)="deletePost(post)">
+            Delete
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noPosts>
+    <p>No posts available.</p>
+  </ng-template>
 
   <!-- Dialog Template -->
   <ng-template #dialogTemplate let-data>
-    <form [formGroup]="postForm" (ngSubmit)="saveItem($event)">
-      <h2 mat-dialog-title>{{ data.isEdit ? "Edit" : "Add New" }} Post</h2>
+    <form [formGroup]="postForm">
+      <h2 mat-dialog-title>{{ this.selectedId ? "Edit" : "Add New" }} Post</h2>
       <mat-dialog-content>
         <mat-form-field appearance="fill" class="w-full">
           <mat-label>Title</mat-label>
@@ -61,8 +77,8 @@
           </div>
 
           <img
-            *ngIf="selectedFile"
-            [src]="selectedFile"
+            *ngIf="postForm.get('img')?.value"
+            [src]="postForm.get('img')?.value"
             alt="Selected image"
             class="w-32 h-32 object-cover rounded mt-2"
           />
@@ -70,14 +86,15 @@
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
-        <button mat-button (click)="closeDialog()">Cancel</button>
+        <button mat-button type="button" (click)="closeDialog()">Cancel</button>
         <button
           mat-raised-button
           color="primary"
-          type="submit"
+          (click)="this.selectedId ? updatePost() : saveItem()"
+          type="button"
           [disabled]="postForm.invalid"
         >
-          Save
+          {{ this.selectedId ? "Update" : "Save" }}
         </button>
       </mat-dialog-actions>
     </form>
