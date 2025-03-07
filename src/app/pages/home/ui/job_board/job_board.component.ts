@@ -36,9 +36,7 @@ export class JobboardComponent {
     },
   ];
 
-  constructor(private router: Router) {
-    console.log(this.portfolioItems, 'otems');
-  }
+  constructor(private router: Router) {}
 
   navigateToJob(id: number) {
     this.router.navigate(['/job', id]);

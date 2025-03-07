@@ -17,7 +17,7 @@ import {
 import { ApiService } from '../../../services/api.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
-
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
@@ -31,6 +31,7 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatFormFieldModule,
     FormsModule,
+    NzSpinModule,
   ],
 })
 export class PostsComponent {
@@ -42,6 +43,7 @@ export class PostsComponent {
   });
 
   selectedId?: number;
+  loadingBlogs: boolean = false;
 
   constructor(
     private dialog: MatDialog,
@@ -66,11 +68,14 @@ export class PostsComponent {
   }
 
   getBlogs() {
+    this.loadingBlogs = true;
     this.apiService.getBlogs().subscribe({
       next: (response: any) => {
+        this.loadingBlogs = false;
         this.posts = response.data;
       },
       error: (error: any) => {
+        this.loadingBlogs = false;
         console.error('Failed to fetch blogs', error);
       },
     });
