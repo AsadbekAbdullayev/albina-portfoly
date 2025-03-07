@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,110 +6,204 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
-
+import { MatIconModule } from '@angular/material/icon';
+import { ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
+import { ApiService } from '../../../services/api.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { Router } from '@angular/router';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 @Component({
   selector: 'app-portfolio',
-  standalone: true,
   templateUrl: './portfolios.component.html',
   styleUrls: ['./portfolios.component.css'],
   imports: [
+    MatIconModule,
+    ReactiveFormsModule,
     CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
     FormsModule,
+    NzSpinModule,
   ],
 })
 export class PortfolioComponent {
   @ViewChild('dialogTemplate') dialogTemplate!: TemplateRef<any>;
-  selectedFiles: File[] = [];
+  postForm = new FormGroup({
+    title: new FormControl('', [Validators.required]),
+    description: new FormControl('', [Validators.required]),
+    img: new FormControl('', Validators.required),
+  });
+
+  selectedId?: number;
+  loadingBlogs: boolean = false;
+
+  constructor(
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private apiService: ApiService,
+    private message: NzMessageService,
+    private router: Router
+  ) {
+    this.postForm = this.fb.group({
+      title: '',
+      description: '',
+      img: '', // Holds the file
+    });
+  }
+
   dialogRef: any;
+  selectedFile: string = '';
+  posts: any[] = [];
 
-  portfolios = [
-    {
-      id: 1,
-      title: 'First Portfolio',
-      description: 'This is the first portfolio item.',
-      images: [],
-    },
-  ];
+  ngOnInit() {
+    this.getBlogs();
+  }
 
-  constructor(private dialog: MatDialog) {}
+  getBlogs() {
+    this.loadingBlogs = true;
+    this.apiService.getBlogs().subscribe({
+      next: (response: any) => {
+        this.loadingBlogs = false;
+        this.posts = response.data;
+      },
+      error: (error: any) => {
+        this.loadingBlogs = false;
+        console.error('Failed to fetch blogs', error);
+      },
+    });
+  }
 
-  onFileSelected(event: any) {
-    const files = event.target.files;
-    if (files) {
-      this.selectedFiles = Array.from(files);
-      this.selectedFiles.forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          if (this.dialogRef) {
-            if (!this.dialogRef.componentInstance.data.item.images) {
-              this.dialogRef.componentInstance.data.item.images = [];
-            }
-            this.dialogRef.componentInstance.data.item.images.push(
-              e.target.result
-            );
-          }
-        };
-        reader.readAsDataURL(file);
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      // this.postForm.patchValue({ img: file });
+      // this.selectedFile = URL.createObjectURL(file);
+      this.apiService.uploadFile(file).subscribe({
+        next: (response) => {
+          this.postForm.patchValue({
+            img: response.data.fileUrl,
+          });
+        },
+        error: (error) => {
+          console.error('File upload failed', error);
+        },
       });
     }
   }
 
-  openDialog(
-    item: any = { title: '', description: '', images: [] },
-    isEdit: boolean = false
-  ) {
+  openDialog(isAdding: any) {
+    if (isAdding) {
+      this.postForm.patchValue({
+        title: '',
+        description: '',
+        img: '',
+      });
+    }
     this.dialogRef = this.dialog.open(this.dialogTemplate, {
-      data: { item, isEdit },
+      data: {},
       width: '500px',
     });
+  }
 
-    this.selectedFiles = [];
+  addPost(post: any) {
+    this.posts.push({
+      ...post,
+      id: this.posts.length + 1,
+    });
+  }
 
-    this.dialogRef.afterClosed().subscribe((result: any) => {
-      if (result) {
-        if (isEdit) {
-          this.editPortfolio(result);
+  editPost(post: any) {
+    this.selectedId = post.id;
+
+    this.postForm.patchValue({
+      title: post.title,
+      description: post.content,
+      img: post.thumbnail,
+    });
+    this.openDialog(false);
+  }
+
+  updatePost() {
+    const { title, description, img } = this.postForm.value;
+    if (!title || !description || !img) {
+      this.message.warning('Please fill the fields');
+    } else {
+      this.apiService
+        .updateBlog(this.selectedId || 0, title, description, img)
+        .subscribe({
+          next: (response: any) => {
+            this.message.success('Blog is updated !');
+            this.dialog.closeAll();
+            this.postForm.patchValue({ img: '', title: '', description: '' });
+            this.selectedId = undefined;
+            this.getBlogs();
+          },
+          error: (error: any) => {
+            if (error.status == 401 || error.status == 403) {
+              this.dialog.closeAll();
+              this.message.error('Auth failed');
+              this.router.navigate(['/login']);
+            } else {
+              this.message.error(error.error.message);
+            }
+          },
+        });
+    }
+  }
+
+  deletePost(post: any) {
+    this.apiService.deleteBlog(post.id).subscribe({
+      next: (response: any) => {
+        this.message.success('Blog is deleted !');
+        this.getBlogs();
+      },
+      error: (error: any) => {
+        if (error.status == 401 || error.status == 403) {
+          this.message.error('Auth failed');
+          this.router.navigate(['/login']);
         } else {
-          this.addPortfolio(result);
+          this.message.error('Failed to delete blog');
         }
-      }
+      },
     });
-  }
-
-  addPortfolio(portfolio: any) {
-    this.portfolios.push({
-      ...portfolio,
-      id: this.portfolios.length + 1,
-    });
-  }
-
-  editPortfolio(portfolio: any) {
-    const index = this.portfolios.findIndex((p) => p.id === portfolio.id);
-    if (index !== -1) {
-      this.portfolios[index] = { ...portfolio };
-    }
-  }
-
-  deletePortfolio(portfolio: any) {
-    this.portfolios = this.portfolios.filter((p) => p.id !== portfolio.id);
-  }
-
-  removeImage(imageIndex: number) {
-    if (this.dialogRef) {
-      this.dialogRef.componentInstance.data.item.images.splice(imageIndex, 1);
-    }
   }
 
   closeDialog() {
     this.dialog.closeAll();
+    this.postForm.patchValue({ img: '', title: '', description: '' });
+    this.selectedId = undefined;
   }
 
-  saveItem(data: any) {
-    this.dialog.closeAll();
-    return data.item;
+  saveItem() {
+    const { title, description, img } = this.postForm.value;
+    if (!title || !description || !img) {
+      this.message.warning('Please fill the fields');
+    } else {
+      this.apiService.postBlog(title, description, img).subscribe({
+        next: (response: any) => {
+          this.message.success('Blog is created !');
+          this.dialog.closeAll();
+          this.postForm.patchValue({ img: '', title: '', description: '' });
+          this.getBlogs();
+        },
+        error: (error: any) => {
+          if (error.status == 401 || error.status == 403) {
+            this.dialog.closeAll();
+            this.message.error('Auth failed');
+            this.router.navigate(['/login']);
+          } else {
+            this.message.error(error.error.message);
+          }
+        },
+      });
+    }
   }
 }

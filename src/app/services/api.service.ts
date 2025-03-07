@@ -11,25 +11,14 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token'); // Retrieve the token
+    const token = localStorage.getItem('token');
     if (token) {
       return new HttpHeaders({
-        Authorization: `Bearer ${token}`, // Add the token to the header
+        Authorization: `Bearer ${token}`,
       });
     } else {
-      return new HttpHeaders(); // Return empty headers if no token
+      return new HttpHeaders();
     }
-  }
-  getData(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/your-endpoint`, {
-      headers: this.getHeaders(),
-    });
-  }
-
-  postData(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/your-endpoint`, data, {
-      headers: this.getHeaders(),
-    });
   }
 
   uploadFile(file: File): Observable<any> {
@@ -69,6 +58,36 @@ export class ApiService {
   }
   deleteBlog(id: number): any {
     return this.http.delete(`${this.apiUrl}/admin/blogs/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // portfolios
+
+  postPortfolio(title: string, content: string, thumbnail: string): any {
+    const Data = { title, content, thumbnail };
+    return this.http.post(`${this.apiUrl}/admin/Portfolios`, Data, {
+      headers: this.getHeaders(),
+    });
+  }
+  updatePortfolio(
+    id: number,
+    title: string,
+    content: string,
+    thumbnail: string
+  ): any {
+    const Data = { id, title, content, thumbnail };
+    return this.http.put(`${this.apiUrl}/admin/Portfolios`, Data, {
+      headers: this.getHeaders(),
+    });
+  }
+  getPortfolios(): any {
+    return this.http.get(`${this.apiUrl}/admin/Portfolios`, {
+      headers: this.getHeaders(),
+    });
+  }
+  deletePortfolio(id: number): any {
+    return this.http.delete(`${this.apiUrl}/admin/Portfolios/${id}`, {
       headers: this.getHeaders(),
     });
   }
