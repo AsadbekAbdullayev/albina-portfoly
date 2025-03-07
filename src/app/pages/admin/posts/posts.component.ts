@@ -14,9 +14,12 @@ import {
   FormBuilder,
   Validators,
 } from '@angular/forms';
+import { ApiService } from '../../../services/api.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-posts',
-  standalone: true,
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.css'],
   imports: [
@@ -37,7 +40,16 @@ export class PostsComponent {
     description: new FormControl('', [Validators.required]),
     img: new FormControl('', Validators.required),
   });
-  constructor(private dialog: MatDialog, private fb: FormBuilder) {
+
+  selectedId?: number;
+
+  constructor(
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private apiService: ApiService,
+    private message: NzMessageService,
+    private router: Router
+  ) {
     this.postForm = this.fb.group({
       title: '',
       description: '',
@@ -47,40 +59,52 @@ export class PostsComponent {
 
   dialogRef: any;
   selectedFile: string = '';
-  posts = [
-    {
-      id: 1,
-      title: 'First Post',
-      description: 'This is the first post.',
-      image: null,
-    },
-  ];
+  posts: any[] = [];
+
+  ngOnInit() {
+    this.getBlogs();
+  }
+
+  getBlogs() {
+    this.apiService.getBlogs().subscribe({
+      next: (response: any) => {
+        this.posts = response.data;
+      },
+      error: (error: any) => {
+        console.error('Failed to fetch blogs', error);
+      },
+    });
+  }
 
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.postForm.patchValue({ img: file });
-      this.selectedFile = URL.createObjectURL(file);
+      // this.postForm.patchValue({ img: file });
+      // this.selectedFile = URL.createObjectURL(file);
+      this.apiService.uploadFile(file).subscribe({
+        next: (response) => {
+          this.postForm.patchValue({
+            img: response.data.fileUrl,
+          });
+        },
+        error: (error) => {
+          console.error('File upload failed', error);
+        },
+      });
     }
   }
 
-  openDialog(
-    item: any = { title: '', description: '', image: '' },
-    isEdit: boolean = false
-  ) {
+  openDialog(isAdding: any) {
+    if (isAdding) {
+      this.postForm.patchValue({
+        title: '',
+        description: '',
+        img: '',
+      });
+    }
     this.dialogRef = this.dialog.open(this.dialogTemplate, {
-      data: { item, isEdit },
+      data: {},
       width: '500px',
-    });
-
-    this.dialogRef.afterClosed().subscribe((result: any) => {
-      if (result) {
-        if (isEdit) {
-          this.editPost(result);
-        } else {
-          this.addPost(result);
-        }
-      }
     });
   }
 
@@ -92,25 +116,89 @@ export class PostsComponent {
   }
 
   editPost(post: any) {
-    const index = this.posts.findIndex((p) => p.id === post.id);
-    if (index !== -1) {
-      this.posts[index] = { ...post };
+    this.selectedId = post.id;
+
+    this.postForm.patchValue({
+      title: post.title,
+      description: post.content,
+      img: post.thumbnail,
+    });
+    this.openDialog(false);
+  }
+
+  updatePost() {
+    const { title, description, img } = this.postForm.value;
+    if (!title || !description || !img) {
+      this.message.warning('Please fill the fields');
+    } else {
+      this.apiService
+        .updateBlog(this.selectedId || 0, title, description, img)
+        .subscribe({
+          next: (response: any) => {
+            this.message.success('Blog is updated !');
+            this.dialog.closeAll();
+            this.postForm.patchValue({ img: '', title: '', description: '' });
+            this.selectedId = undefined;
+            this.getBlogs();
+          },
+          error: (error: any) => {
+            if (error.status == 401 || error.status == 403) {
+              this.dialog.closeAll();
+              this.message.error('Auth failed');
+              this.router.navigate(['/login']);
+            } else {
+              this.message.error(error.error.message);
+            }
+          },
+        });
     }
   }
 
   deletePost(post: any) {
-    this.posts = this.posts.filter((p) => p.id !== post.id);
+    this.apiService.deleteBlog(post.id).subscribe({
+      next: (response: any) => {
+        this.message.success('Blog is deleted !');
+        this.getBlogs();
+      },
+      error: (error: any) => {
+        if (error.status == 401 || error.status == 403) {
+          this.message.error('Auth failed');
+          this.router.navigate(['/login']);
+        } else {
+          this.message.error('Failed to delete blog');
+        }
+      },
+    });
   }
 
   closeDialog() {
     this.dialog.closeAll();
     this.postForm.patchValue({ img: '', title: '', description: '' });
+    this.selectedId = undefined;
   }
 
-  saveItem(e: any) {
-    // e.preventDefault();
-    this.dialog.closeAll();
-    console.log(this.postForm.value, 'submitForm');
-    this.postForm.patchValue({ img: '', title: '', description: '' });
+  saveItem() {
+    const { title, description, img } = this.postForm.value;
+    if (!title || !description || !img) {
+      this.message.warning('Please fill the fields');
+    } else {
+      this.apiService.postBlog(title, description, img).subscribe({
+        next: (response: any) => {
+          this.message.success('Blog is created !');
+          this.dialog.closeAll();
+          this.postForm.patchValue({ img: '', title: '', description: '' });
+          this.getBlogs();
+        },
+        error: (error: any) => {
+          if (error.status == 401 || error.status == 403) {
+            this.dialog.closeAll();
+            this.message.error('Auth failed');
+            this.router.navigate(['/login']);
+          } else {
+            this.message.error(error.error.message);
+          }
+        },
+      });
+    }
   }
 }

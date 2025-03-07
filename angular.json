@@ -66,6 +66,33 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2MB",
+                  "maximumError": "5MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -78,6 +105,9 @@
             },
             "development": {
               "buildTarget": "albina:build:development"
+            },
+            "staging": {
+              "buildTarget": "albina:build:staging"
             }
           },
           "defaultConfiguration": "development"

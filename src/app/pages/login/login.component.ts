@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
+import { ApiService } from '../../services/api.service';
+import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd/message';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -8,12 +11,32 @@ import { FormsModule } from '@angular/forms'; // Import FormsModule
   imports: [CommonModule, FormsModule],
 })
 export class LoginComponent {
-  username: string = '';
+  login: string = '';
   password: string = '';
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    private message: NzMessageService
+  ) {}
 
-  login() {
-    // Implement login logic here
-    console.log('Username:', this.username);
-    console.log('Password:', this.password);
+  signin() {
+    if (!this.login || !this.password) {
+      this.message.warning('Please fill the fields');
+    } else {
+      this.apiService.login(this.login, this.password).subscribe({
+        next: (response: any) => {
+          this.message.success('Welcome');
+          localStorage.setItem('token', response.accessToken); // Store the token
+          this.router.navigate(['/admin']); // Navigate to dashboard
+        },
+        error: (error: any) => {
+          if (error.error.message == 'email_or_password_error') {
+            this.message.error('Login or Password is wrong !');
+          } else {
+            this.message.error(error.error.message);
+          }
+        },
+      });
+    }
   }
 }
