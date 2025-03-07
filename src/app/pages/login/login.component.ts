@@ -12,6 +12,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class LoginComponent {
   login: string = '';
+  loading: boolean = false;
   password: string = '';
   constructor(
     private apiService: ApiService,
@@ -23,13 +24,17 @@ export class LoginComponent {
     if (!this.login || !this.password) {
       this.message.warning('Please fill the fields');
     } else {
+      this.loading = true;
+
       this.apiService.login(this.login, this.password).subscribe({
         next: (response: any) => {
           this.message.success('Welcome');
           localStorage.setItem('token', response.accessToken); // Store the token
           this.router.navigate(['/admin']); // Navigate to dashboard
+          this.loading = false;
         },
         error: (error: any) => {
+          this.loading = false;
           if (error.error.message == 'email_or_password_error') {
             this.message.error('Login or Password is wrong !');
           } else {

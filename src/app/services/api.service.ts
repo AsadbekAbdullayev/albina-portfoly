@@ -99,8 +99,25 @@ export class ApiService {
   }
 
   // get all post
-  getBlogsForUser(): any {
+  getBlogsForUsers(): any {
     return this.http.get(`${this.apiUrl}/public/blogs`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  getBlogById(id: number) {
+    return this.http.get(`${this.apiUrl}/public/blogs/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  getJobsForUsers(): any {
+    return this.http.get(`${this.apiUrl}/public/projects`, {
+      headers: this.getHeaders(),
+    });
+  }
+  getjobById(id: number) {
+    return this.http.get(`${this.apiUrl}/public/projects/${id}`, {
       headers: this.getHeaders(),
     });
   }

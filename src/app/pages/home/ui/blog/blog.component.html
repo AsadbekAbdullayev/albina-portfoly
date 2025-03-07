@@ -150,7 +150,13 @@
 
   <!-- ngx-slick-carousel -->
   <div class="w-full max-w-[1340px] mt-9 px-2">
-    <ngx-slick-carousel class="carousel" [config]="slideConfig">
+    <nz-skeleton *ngIf="loading" [nzActive]="true"></nz-skeleton>
+
+    <ngx-slick-carousel
+      class="carousel"
+      *ngIf="!loading"
+      [config]="slideConfig"
+    >
       <div
         ngxSlickItem
         *ngFor="let slide of slides; let i = index"
