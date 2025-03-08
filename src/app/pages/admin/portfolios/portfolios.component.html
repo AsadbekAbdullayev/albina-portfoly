@@ -23,7 +23,8 @@
         >
           <iframe
             width="100%"
-            height="100%"
+            height="300px"
+            (click)="Log('YouTube video clicked')"
             [src]="post.youtubeLink"
             frameborder="0"
             allowfullscreen
@@ -32,17 +33,15 @@
 
         <!-- Images -->
         <div class="w-full flex !gap-2 !flex-wrap">
-          <div
-            *ngFor="let image of post.photoLinks"
-            class="w-36 h-36 p-1 border border-gray-300 rounded"
-          >
+          @for (image of post.photoLinks; track $index) {
+          <div class="w-36 h-36 p-1 border border-gray-300 rounded">
             <img
               [src]="image"
               alt="Selected image"
-              loading="lazy"
               class="w-full h-full object-cover rounded"
             />
           </div>
+          }
         </div>
 
         <div class="mt-2">

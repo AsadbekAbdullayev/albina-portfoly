@@ -12,6 +12,7 @@ import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 export class PortfolioComponent {
   loading = false;
   portFolioDetail = {};
+
   constructor(private apiService: ApiService, private route: ActivatedRoute) {}
   getBlog(id: number) {
     this.loading = true;
@@ -19,6 +20,7 @@ export class PortfolioComponent {
       next: (response: any) => {
         this.loading = false;
         this.portFolioDetail = response.data;
+        console.log(response.data, 'res');
       },
       error: (error: any) => {
         this.loading = false;
