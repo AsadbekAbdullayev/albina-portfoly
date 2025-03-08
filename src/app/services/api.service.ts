@@ -1,14 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { DITokens } from '../utils/di.tokens';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = environment.apiUrl;
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(DITokens.API_ENDPOINT) private apiUrl: string
+  ) {}
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
