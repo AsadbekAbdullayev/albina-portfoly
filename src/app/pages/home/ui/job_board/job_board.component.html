@@ -80,10 +80,10 @@
         <nz-skeleton *ngIf="loading" [nzActive]="true"></nz-skeleton>
         <div class="flex flex-wrap justify-start gap-2" *ngIf="!loading">
           <div
-            *ngFor="let item of portfolioItems"
+            *ngFor="let item of portfolioItems()"
             (click)="navigateToJob(item.id)"
             class="rounded-2xl group relative bg-cover bg-center transition-all duration-500 max-[380px]:w-[322px] !w-[362px] !h-[300px] cursor-pointer"
-            [style.backgroundImage]="'url(' + item.image + ')'"
+            [style.backgroundImage]="'url(' + item.photoLinks[0] + ')'"
           >
             <div
               class="rounded-2xl absolute inset-0 bg-gradient-to-b from-transparent to-[#020617] opacity-0 group-hover:opacity-100 transition-opacity duration-500"

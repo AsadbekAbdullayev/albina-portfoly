@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { CommonModule } from '@angular/common';
@@ -13,28 +13,9 @@ import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 export class BlogComponent {
   loading = false;
   blogs = [];
-  slides = [
-    {
-      img: 'assets/images/test-image.png',
-      title: 'ARTICLE',
-      desc: 'How to Navigate International Payments for Education Without Stress',
-    },
-    {
-      img: 'assets/images/test-image.png',
-      title: 'Title 2',
-      desc: 'Overcoming Challenges in Foreign Currency Tuition Payments',
-    },
-    {
-      img: 'assets/images/test-image.png',
-      title: 'ARTICLE',
-      desc: 'How to Navigate International Payments for Education Without Stress',
-    },
-    {
-      img: 'assets/images/test-image.png',
-      title: 'Title 2',
-      desc: 'Overcoming Challenges in Foreign Currency Tuition Payments',
-    },
-  ];
+  slides = signal<{ img: string; desc: string; title: string; id: number }[]>(
+    []
+  );
 
   slideConfig = {
     slidesToShow: 3,
@@ -74,7 +55,15 @@ export class BlogComponent {
     this.apiService.getBlogsForUsers().subscribe({
       next: (response: any) => {
         this.loading = false;
-        this.blogs = response.data;
+        let newData = response.data.map((item: any) => {
+          return {
+            id: item.id,
+            img: item.thumbnail,
+            desc: item.content,
+            title: '',
+          };
+        });
+        this.slides.set(newData);
       },
       error: (error: any) => {
         this.loading = false;

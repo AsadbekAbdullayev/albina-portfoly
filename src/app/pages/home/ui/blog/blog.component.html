@@ -159,16 +159,16 @@
     >
       <div
         ngxSlickItem
-        *ngFor="let slide of slides; let i = index"
+        *ngFor="let slide of slides(); let i = index"
         class="slide"
-        (click)="navigateToBlog(i)"
+        (click)="navigateToBlog(slide.id)"
       >
         <div
           class="relative max-[480px]:w-[323.637px] w-[393.637px] h-[292.496px] cursor-pointer flex-shrink-0 bg-cover bg-center mx-auto rounded-3xl"
-          [style.backgroundImage]="'url(' + slide.img + ')'"
+          [style.backgroundImage]="'url(' + slide?.img + ')'"
         >
           <div
-            class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t rounded-3xl from-black to-transparent"
+            class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t rounded-b-3xl from-black to-transparent"
           >
             <p class="!text-white text-sm truncate max-h-[3.6em]">
               {{ slide.title }}

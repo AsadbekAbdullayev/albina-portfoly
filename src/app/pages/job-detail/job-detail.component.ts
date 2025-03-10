@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { BodyComponent } from './body/body.component';
 import { ApiService } from '../../services/api.service';
@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class JobDetailComponent {
   loading = false;
-  blogDetail = {};
+  blogDetail = signal<any>({});
   constructor(private apiService: ApiService, private route: ActivatedRoute) {}
 
   getBlog(id: number) {
@@ -20,7 +20,7 @@ export class JobDetailComponent {
     this.apiService.getBlogById(id).subscribe({
       next: (response: any) => {
         this.loading = false;
-        this.blogDetail = response.data;
+        this.blogDetail.set(response.data);
       },
       error: (error: any) => {
         this.loading = false;
