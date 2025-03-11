@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { NavbarComponent } from '../../../shared/ui/navbar/navbar.component';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { ApiService } from '../../../services/api.service';
@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 export class BodyComponent implements OnInit {
   imageSrc = '/assets/img/test-image.png';
   loading = false;
-  blogDetail = {};
+  blogDetail = signal<any>({});
   constructor(private apiService: ApiService, private route: ActivatedRoute) {}
 
   getBlog(id: number) {
@@ -21,7 +21,7 @@ export class BodyComponent implements OnInit {
     this.apiService.getBlogById(id).subscribe({
       next: (response: any) => {
         this.loading = false;
-        this.blogDetail = response.data;
+        this.blogDetail.set(response.data);
       },
       error: (error: any) => {
         this.loading = false;

@@ -1,6 +1,14 @@
-import { Component, ViewChild, TemplateRef, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {
+  Component,
+  ViewChild,
+  TemplateRef,
+  OnInit,
+  HostListener,
+  signal,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,20 +26,25 @@ import { ApiService } from '../../../services/api.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzImageModule } from 'ng-zorro-antd/image';
+import { ChangeDetectorRef } from '@angular/core';
+import { YouTubePlayer } from '@angular/youtube-player';
 @Component({
   selector: 'app-portfolio',
   templateUrl: './portfolios.component.html',
   styleUrls: ['./portfolios.component.css'],
   imports: [
     MatIconModule,
-    ReactiveFormsModule,
+    YouTubePlayer,
     CommonModule,
+    ReactiveFormsModule,
     MatDialogModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
     FormsModule,
     NzSpinModule,
+    NzImageModule,
   ],
 })
 export class PortfolioComponent implements OnInit {
@@ -41,7 +54,8 @@ export class PortfolioComponent implements OnInit {
     description: new FormControl('', [Validators.required]),
     youtubeLink: new FormControl('', [Validators.required]),
   });
-
+  width = signal(600);
+  height = signal(300);
   images: { id: number; url: string }[] = [];
   selectedId?: number;
   loadingBlogs: boolean = false;
@@ -51,7 +65,8 @@ export class PortfolioComponent implements OnInit {
     private fb: FormBuilder,
     private apiService: ApiService,
     private message: NzMessageService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.postForm = this.fb.group({
       title: '',
@@ -59,21 +74,35 @@ export class PortfolioComponent implements OnInit {
       youtubeLink: '',
     });
   }
+  @ViewChild('Player') Player!: ElementRef<HTMLDivElement>;
   dialogRef: any;
   posts: any[] = [];
+  @HostListener('window:resize')
+  onResize() {
+    this.width.set(this.Player.nativeElement.clientWidth * 0.99);
+    this.cdr.detectChanges();
+  }
+
+  extractVideoId(url: string): string | null {
+    const regex =
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([\w-]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+  }
 
   ngOnInit() {
     this.getPortfolios();
+    this.width.set(this.Player.nativeElement.clientWidth * 0.9);
+    this.cdr.detectChanges();
   }
-  Log(e: any) {
-    console.log(e, 'e');
-  }
+
   getPortfolios() {
     this.loadingBlogs = true;
     this.apiService.getPortfolios().subscribe({
       next: (response: any) => {
         this.loadingBlogs = false;
         this.posts = response.data;
+        this.cdr.detectChanges();
       },
       error: (error: any) => {
         this.loadingBlogs = false;

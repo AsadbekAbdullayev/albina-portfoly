@@ -19,16 +19,14 @@
         <p class="line-clamp-2">{{ post.description }}</p>
         <!-- YouTube Video -->
         <div
-          class="!relative w-full max-w-[600px] !h-[300px] p-0 !rounded my-4 border border-gray-300"
+          #Player
+          class="!relative w-full max-w-[600px] !h-[300px] p-0 !rounded my-4"
         >
-          <iframe
-            width="100%"
-            height="300px"
-            (click)="Log('YouTube video clicked')"
-            [src]="post.youtubeLink"
-            frameborder="0"
-            allowfullscreen
-          ></iframe>
+          <youtube-player
+            [videoId]="extractVideoId(post.youtubeLink) || ''"
+            [width]="width()"
+            height="300"
+          ></youtube-player>
         </div>
 
         <!-- Images -->
