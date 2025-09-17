@@ -99,4 +99,14 @@ export class ApiService {
   getJobById(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/public/projects/${id}`);
   }
+  
+  uploadMultipleFiles(files: File[]): Observable<any> {
+  const formData = new FormData();
+  files.forEach(file => formData.append('files', file, file.name));
+
+  return this.http.post(`${this.apiUrl}/public/upload/multiple`, formData, {
+    headers: this.getHeaders(),
+  });
+}
+
 }
