@@ -1,23 +1,29 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FooterComponent } from '../../../shared/ui/footer/footer.component';
+import { ViewportScroller } from '@angular/common';
+
 @Component({
   selector: 'app-body',
+  standalone: true,
+  imports: [FooterComponent],
   templateUrl: './body.component.html',
   styleUrls: ['./body.component.css'],
-  imports: [FooterComponent],
 })
 export class BodyComponent implements OnInit {
-  imageArray = [
-    { src: '/assets/img/test-image.png' },
-    { src: '/assets/img/test-image.png' },
-    { src: '/assets/img/test-image.png' },
-    { src: '/assets/img/test-image.png' },
-    { src: '/assets/img/test-image.png' },
-    { src: '/assets/img/test-image.png' },
-  ];
-  @Input() blogDetail: any = {};
-  @Input() loading: boolean = false;
+  constructor(private viewportScroller: ViewportScroller) {}
+
+  imageArray = Array(6).fill({ src: '/assets/img/test-image.png' });
+
+  @Input() blogDetail: BlogDetail | null = null;
+  @Input() loading = false;
+
   ngOnInit() {
-    window.scrollTo(0, 0);
+    this.viewportScroller.scrollToPosition([0, 0]);
   }
+}
+
+export interface BlogDetail {
+  title: string;
+  content: string;
+  author: string;
+  createdAt: Date;
 }
